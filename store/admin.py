@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from store.models import CustomUser
+from store.models import CustomUser, Category, Product, Cart, CartItem, Order
 
 
 @admin.register(CustomUser)
@@ -24,3 +24,32 @@ class CustomUserAdmin(UserAdmin):
             ),
         )
     )
+
+
+@admin.register(Category)
+class CategoryAdmin(admin.ModelAdmin):
+    list_display = ["name"]
+    search_fields = ["name"]
+
+
+@admin.register(Product)
+class ProductAdmin(admin.ModelAdmin):
+    list_display = [
+        "name",
+        "price",
+        "category",
+        "memory",
+        "battery_capacity",
+        "screen_size",
+        "color",
+        "description",
+        "image"
+    ]
+
+    search_fields = ["category__name"]
+    ordering = ["price"]
+
+
+admin.site.register(Cart)
+admin.site.register(CartItem)
+admin.site.register(Order)
