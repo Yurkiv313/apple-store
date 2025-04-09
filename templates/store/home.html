@@ -11,4 +11,15 @@
     <a class="btn btn-primary" style="float: right" href="{% url 'login' %}">Login</a>
   {% endif %}
   <h1 style="text-align: center">Home Store Page </h1>
+  <ul>
+    <li>
+      <a href="{% url "store:product-list" %}">All Products</a>
+    </li>
+    <li>
+      <a href="{% url "store:category-list" %}">Categories</a>
+    </li>
+    <li>
+      <a href="{% url "store:cart" %}">Cart</a>
+    </li>
+  </ul>
 {% endblock %}
