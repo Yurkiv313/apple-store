@@ -2,4 +2,12 @@
 
 {% block content %}
   <h1>Product list</h1>
+  {% for product in product_list %}
+    <div style="font-size: large">
+      {{ product.name }} {{ product.price }} Category: {{ product.category }}
+      <a class="btn btn-outline-dark btn-sm" href="{% url "store:product-detail" pk=product.id %}">Detail</a>
+    </div><hr>
+
+    {% endfor %}
+
 {% endblock %}

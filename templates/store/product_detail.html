@@ -1,5 +1,31 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <p>Product Detail</p>
+  <h1>{{ product.name }} Detail</h1>
+
+  <div class="container">
+    <div class="product-detail-wrapper">
+      <div class="product-image-section">
+        <img src="#" alt="Photo">
+      </div>
+
+      <div class="product-info-section">
+        <div>
+          <h2>{{ product.name }}</h2>
+          <p>Категорія: {{ product.category }}</p>
+          <p>Памʼять: {{ product.memory }} GB</p>
+          <p>Ємність акумулятора: {{ product.battery_capacity }}</p>
+          <p>Розмір екрана: {{ product.screen_size }} mpx</p>
+          <p>Колір: {{ product.color }}</p>
+          <p>Ціна: {{ product.price }} $</p>
+        </div>
+        <button class="btn btn-outline-dark btn-sm" style="width: 200px; height: 50px;">Додати до кошика</button>
+      </div>
+    </div>
+  </div>
+
+  <div>
+    <h3>Description</h3>
+    <p>{{ product.description }}</p>
+  </div>
 {% endblock %}

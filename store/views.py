@@ -14,10 +14,19 @@ class ProductListView(generic.ListView):
 
 class ProductDetailView(generic.DetailView):
     model = Product
+    context_object_name = "product"
 
 
 class CategoryListView(generic.ListView):
     model = Category
+
+
+class CategoryProductListView(generic.ListView):
+    model = Product
+
+    def get_queryset(self):
+        pk = self.kwargs["pk"]
+        return Product.objects.filter(category=pk)
 
 
 class CartView(generic.TemplateView):
