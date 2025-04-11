@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <h1>🛒 Your Cart</h1>
+  {% for item in cart_items %}
+    <div style="font-size: large">
+      {{ item.product.name }}
+      | Category: {{ item.product.category }}
+      | quantity:{{ item.quantity }}
+      | total price: {{ item.total_price }}
+    </div><hr>
+    {% endfor %}
+  <div>
+    <h3>Total order price:</h3>
+    <p>{{ total_order_price }}</p>
+  </div>
+{% endblock %}

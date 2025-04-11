@@ -19,7 +19,12 @@
           <p>Колір: {{ product.color }}</p>
           <p>Ціна: {{ product.price }} $</p>
         </div>
-        <button class="btn btn-outline-dark btn-sm" style="width: 200px; height: 50px;">Додати до кошика</button>
+        <form action="{% url 'store:add-to-cart' product_id=product.id %}" method="post">
+          {% csrf_token %}
+          {{ form.as_p }}
+          <button type="submit" class="btn btn-outline-dark btn-sm" style="width: 200px; height: 50px;">Додати до кошика</button>
+        </form>
+
       </div>
     </div>
   </div>
