@@ -1,12 +1,15 @@
+from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views import generic, View
 from django.views.generic import TemplateView
+from django.utils.safestring import mark_safe
 
 from store.forms import CartItemForm
-from store.models import Product, Category, CartItem, Cart
+from store.models import Product, Category, CartItem, Cart, Order
 
 
 class HomeView(TemplateView):
@@ -84,6 +87,32 @@ class CartItemCreateView(generic.CreateView):
 
     def get_success_url(self):
         return reverse("store:product-detail", kwargs={"pk": self.object.product.id})
+
+
+class OrderCreateView(LoginRequiredMixin, generic.CreateView):
+    model = Order
+    fields = []
+    login_url = "/login/"
+    template_name = "store/order_confirm_page.html"
+    success_url = reverse_lazy("store:home")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["cancel_url"] = reverse_lazy("store:cart")
+        return context
+
+    def form_valid(self, form):
+        form.instance.user = self.request.user
+        CartItem.objects.filter(cart__user=self.request.user).delete()
+        messages.success(
+            self.request,
+            mark_safe(
+                "🤖 Дякую за замовлення! Наші дрони зараз зайняті важливою місією (ви знаєте якою...)😎🇺🇦<br>"
+                "Але не хвилюйтесь — у мене є... альтернативні способи доставки 🛸... Швидкість — гарантована!!!"
+            )
+        )
+
+        return super().form_valid(form)
 
 
 class CustomLoginView(View):

@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <div style="text-align: center; margin-top: 60px;">
+    <h1 style="font-size: 32px;">🤖 Готовий завершити місію?</h1>
+    <p style="font-size: 18px; max-width: 600px; margin: 20px auto;">
+      Я вже запускаю дрони доставки...
+      Але мені потрібне твоє фінальне підтвердження 🛒🚀
+      <strong>Підтверди замовлення або відміні — вибір за тобою!</strong>
+    </p>
+
+    <div class="d-flex justify-content-center mt-4">
+      <form action="" method="post" class="mx-3">
+        {% csrf_token %}
+        <input type="submit" value="✅ Так, купити!" class="btn btn-success btn-lg">
+      </form>
+      <a href="{{ cancel_url }}" class="btn btn-danger btn-lg">❌ Скасувати</a>
+    </div>
+  </div>
+{% endblock %}
+

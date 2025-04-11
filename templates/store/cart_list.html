@@ -1,17 +1,42 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>🛒 Your Cart</h1>
-  {% for item in cart_items %}
-    <div style="font-size: large">
-      {{ item.product.name }}
-      | Category: {{ item.product.category }}
-      | quantity:{{ item.quantity }}
-      | total price: {{ item.total_price }}
-    </div><hr>
-    {% endfor %}
-  <div>
-    <h3>Total order price:</h3>
-    <p>{{ total_order_price }}</p>
-  </div>
+  {% if cart_items %}
+    <div>
+      <h3>
+        🤖 Корзина активна. Рівень щастя: 98%.<br>
+        Пора оформлювати замовлення!
+      </h3>
+    </div>
+    <hr>
+    <h3>🛒 Your Cart</h3>
+    {% for item in cart_items %}
+      <div style="font-size: large">
+        {{ item.product.name }}
+        | Category: {{ item.product.category }}
+        | quantity:{{ item.quantity }}
+        | total price: {{ item.total_price }} $
+      </div><hr>
+      {% endfor %}
+    <div>
+      <h3>Total order price:</h3>
+      <h4>{{ total_order_price }} $</h4>
+    </div>
+    <div>
+      <a class="btn btn-outline-dark btn-sm"
+         style="width: 300px; height: 50px; align-content: center; font-size: large;"
+         href="{% url "store:order-create" %}">Оформити замовлення</a>
+    </div>
+  {% else %}
+    <div style="text-align: center; margin-top: 100px;">
+      <h2 style="font-size: 33px; color: #333;">
+        🤖 Розрахунок завершено. В корзині — пустота.<br>
+        Пора це виправити. Подаруй сенс моєму існуванню, додай щось! 💾
+      </h2>
+      <a class="btn btn-outline-dark btn-lg"
+        style="margin-top: 20px; font-size: 25px; padding: 15px 30px;" href="{% url 'store:product-list' %}">
+        🚀 Let's GO!
+      </a>
+    </div>
+  {% endif %}
 {% endblock %}
