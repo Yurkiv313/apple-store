@@ -79,14 +79,35 @@ class CartItemCreateView(generic.CreateView):
                 session_key=self.request.session.session_key
             )
 
-        form.instance.cart = cart
-        form.instance.product = Product.objects.get(pk=self.kwargs["product_id"])
-        self.object = form.save()
+        product = Product.objects.get(pk=self.kwargs["product_id"])
 
-        return redirect(self.get_success_url())
+        exist_item = CartItem.objects.filter(cart=cart, product=product).first()
+        if exist_item:
+            exist_item.quantity += form.cleaned_data["quantity"]
+            exist_item.save()
+            return redirect(self.get_success_url())
+
+        form.instance.cart = cart
+        form.instance.product = product
+        return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("store:product-detail", kwargs={"pk": self.object.product.id})
+        return reverse("store:product-detail", kwargs={"pk": self.kwargs["product_id"]})
+
+
+class CartItemDeleteView(generic.DeleteView):
+    model = CartItem
+    success_url = reverse_lazy("store:cart")
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+
+        if self.object.quantity > 1:
+            self.object.quantity -= 1
+            self.object.save()
+            return redirect(self.success_url)
+
+        return super().post(request, *args, **kwargs)
 
 
 class OrderCreateView(LoginRequiredMixin, generic.CreateView):

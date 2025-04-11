@@ -9,6 +9,7 @@ from store.views import (
     CategoryProductListView,
     CartItemCreateView,
     OrderCreateView,
+    CartItemDeleteView,
 )
 
 app_name = "store"
@@ -20,6 +21,7 @@ urlpatterns = [
     path("category/", CategoryListView.as_view(), name="category-list"),
     path("category/<int:pk>/products/", CategoryProductListView.as_view(), name="category-products"),
     path("cart/", CartListView.as_view(), name="cart"),
+    path("cart/item/<int:pk>/delete/", CartItemDeleteView.as_view(), name="cartitem-delete"),
     path("add-to-cart/<product_id>/", CartItemCreateView.as_view(), name="add-to-cart"),
     path("order/create/", OrderCreateView.as_view(), name="order-create")
 ]
