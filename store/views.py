@@ -19,10 +19,16 @@ class HomeView(TemplateView):
 class ProductListView(generic.ListView):
     model = Product
 
+    def get_queryset(self):
+        return Product.objects.select_related("category")
+
 
 class ProductDetailView(generic.DetailView):
     model = Product
     context_object_name = "product"
+
+    def get_queryset(self):
+        return Product.objects.select_related("category")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -39,7 +45,7 @@ class CategoryProductListView(generic.ListView):
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
-        return Product.objects.filter(category=pk)
+        return Product.objects.select_related("category").filter(category=pk)
 
 
 class CartListView(generic.ListView):
@@ -48,13 +54,17 @@ class CartListView(generic.ListView):
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
-            return CartItem.objects.filter(cart__user=self.request.user)
+            return CartItem.objects.select_related(
+                "product", "product__category"
+            ).filter(cart__user=self.request.user)
         else:
             session_key = self.request.session.session_key
             if not session_key:
                 self.request.session.create()
                 session_key = self.request.session.session_key
-            return CartItem.objects.filter(cart__session_key=session_key)
+            return CartItem.objects.select_related(
+                "product", "product__category"
+            ).filter(cart__session_key=session_key)
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
