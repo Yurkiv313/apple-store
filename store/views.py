@@ -148,15 +148,23 @@ class OrderCreateView(LoginRequiredMixin, generic.CreateView):
 
 class CustomLoginView(View):
     def get(self, request):
-        return render(request, "registration/login.html", {"form": AuthenticationForm()})
+        next_url = request.GET.get("next", "/")
+        return render(request, "registration/login.html", {
+            "form": AuthenticationForm(),
+            "next": next_url
+        })
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
+        next_url = request.POST.get("next", "/")
         if form.is_valid():
             request.session['pre_login_key'] = request.session.session_key
             login(request, form.get_user())
-            return redirect("store:home")
-        return render(request, "registration/login.html", {"form": form})
+            return redirect(next_url)
+        return render(request, "registration/login.html", {
+            "form": form,
+            "next": next_url
+        })
 
 
 class CustomLogoutView(View):
