@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.2/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.2/ref/settings/
 """
-
+import os
 from pathlib import Path
+from dotenv import load_dotenv
+
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,8 +134,16 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = 'store.CustomUser'
 
-LOGIN_REDIRECT_URL = "/"
-LOGOUT_REDIRECT_URL = "/"
+EMAIL_USE_TLS = True
+EMAIL_HOST = os.getenv("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", "your-email@gmail.com")
+EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", "password")
+EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
+
+
+LOGIN_REDIRECT_URL = "store:home"
+LOGIN_URL = "store:login"
+LOGOUT_REDIRECT_URL = "store:login"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"

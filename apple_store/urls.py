@@ -20,13 +20,15 @@ from django.contrib import admin
 from django.urls import path, include
 import debug_toolbar
 
-from store.views import CustomLoginView, CustomLogoutView
+from store.views import CustomLoginView, CustomLogoutView, SignUpGenericView, ActivateAccountView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("", include("store.urls", namespace="store")),
     path("login/", CustomLoginView.as_view(), name="login"),
     path("logout/", CustomLogoutView.as_view(), name="logout"),
+    path("signup/", SignUpGenericView.as_view(), name="signup"),
+    path("activate/<uidb64>/<token>/", ActivateAccountView.as_view(), name="activate"),
     path("__debug__/", include(debug_toolbar.urls)),
 ]
 

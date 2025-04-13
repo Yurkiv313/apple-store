@@ -1,15 +1,24 @@
+import logging
+
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.sites.shortcuts import get_current_site
+from django.core.mail import EmailMessage
+from django.db import transaction
 from django.shortcuts import redirect, render
+from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
+from django.utils.encoding import force_str, force_bytes
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.views import generic, View
 from django.views.generic import TemplateView
 from django.utils.safestring import mark_safe
 
-from store.forms import CartItemForm
-from store.models import Product, Category, CartItem, Cart, Order
+from store.forms import CartItemForm, CustomUserCreationForm
+from store.models import Product, Category, CartItem, Cart, Order, CustomUser
+from store.services.token_service import account_activation_token
 
 
 class HomeView(TemplateView):
@@ -171,3 +180,57 @@ class CustomLogoutView(View):
     def post(self, request):
         logout(request)
         return redirect("store:home")
+
+
+class SignUpGenericView(generic.CreateView):
+    model = CustomUser
+    template_name = "registration/signup.html"
+    form_class = CustomUserCreationForm
+
+    @transaction.atomic
+    def form_valid(self, form):
+        try:
+            user = form.save(commit=False)
+            user.is_active = False
+            user.save()
+            current_site = get_current_site(self.request)
+            mail_subject = "Activate your account."
+            message = render_to_string(
+                "registration/emails/acc_active_email.html",
+                {
+                    "user": user,
+                    "domain": current_site.domain,
+                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
+                    "token": account_activation_token.make_token(user),
+                },
+            )
+            email = EmailMessage(mail_subject, message, to=[user.email])
+            email.content_subtype = "html"
+            email.send()
+        except Exception as e:
+            logging.error(f"Error sending email: {e}")
+
+            return render(self.request, "registration/signup.html", {"form": form})
+
+        return render(self.request, "registration/email_confirmation_sent.html")
+
+
+class ActivateAccountView(View):
+    def get(self, request, uidb64, token):
+        try:
+            uid = force_str(urlsafe_base64_decode(uidb64))
+            user = CustomUser.objects.get(pk=uid)
+        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+            user = None
+
+        if user is not None and account_activation_token.check_token(user, token):
+            user.is_active = True
+            user.save()
+            # login(request, user)
+            messages.success(
+                request,
+                "🤖 Thank you for confirming your email. You can now login to your account.",
+            )
+            return redirect("login")
+        else:
+            return render(request, "registration/activation_invalid.html")
