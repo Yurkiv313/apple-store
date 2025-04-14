@@ -7,6 +7,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.sites.shortcuts import get_current_site
 from django.core.mail import EmailMessage
 from django.db import transaction
+from django.db.models import Q
 from django.shortcuts import redirect, render
 from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
@@ -16,7 +17,7 @@ from django.views import generic, View
 from django.views.generic import TemplateView
 from django.utils.safestring import mark_safe
 
-from store.forms import CartItemForm, CustomUserCreationForm
+from store.forms import CartItemForm, CustomUserCreationForm, ProductNameSearchForm
 from store.models import Product, Category, CartItem, Cart, Order, CustomUser
 from store.services.token_service import account_activation_token
 
@@ -27,9 +28,26 @@ class HomeView(TemplateView):
 
 class ProductListView(generic.ListView):
     model = Product
+    paginate_by = 5
 
     def get_queryset(self):
-        return Product.objects.select_related("category")
+        queryset = Product.objects.select_related("category")
+        form = ProductNameSearchForm(self.request.GET or None)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            return queryset.filter(
+                Q(name__icontains=query) |
+                Q(category__name__icontains=query) |
+                Q(memory__icontains=query) |
+                Q(color__icontains=query)
+            )
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(ProductListView, self).get_context_data(**kwargs)
+        query = self.request.GET.get("query", "")
+        context["search_form"] = ProductNameSearchForm(initial={"query": query})
+        return context
 
 
 class ProductDetailView(generic.DetailView):
@@ -51,10 +69,26 @@ class CategoryListView(generic.ListView):
 
 class CategoryProductListView(generic.ListView):
     model = Product
+    paginate_by = 5
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
-        return Product.objects.select_related("category").filter(category=pk)
+        queryset = Product.objects.select_related("category").filter(category=pk)
+        form = ProductNameSearchForm(self.request.GET or None)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            return queryset.filter(
+                Q(name__icontains=query) |
+                Q(memory__icontains=query) |
+                Q(color__icontains=query)
+            )
+        return queryset
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super(CategoryProductListView, self).get_context_data(**kwargs)
+        query = self.request.GET.get("query", "")
+        context["search_form"] = ProductNameSearchForm(initial={"query": query})
+        return context
 
 
 class CartListView(generic.ListView):

@@ -1,7 +1,17 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block content %}
   <h1>Product list</h1>
+  <form method="get" class="d-flex gap-2" style="max-width: 600px">
+    <div class="flex-grow-1">
+      {{ search_form|crispy }}
+    </div>
+    <div>
+      <input type="submit" class="btn btn-outline-dark" value="🔍">
+    </div>
+  </form>
+
   {% for product in product_list %}
     <div style="font-size: large">
       {{ product.name }} {{ product.price }} Category: {{ product.category }}
