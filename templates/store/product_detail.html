@@ -1,36 +1,71 @@
 {% extends "base.html" %}
+{% load crispy_forms_filters %}
 
 {% block content %}
-  <h1>{{ product.name }} Detail</h1>
+  <div class="container mt-4">
 
-  <div class="container">
-    <div class="product-detail-wrapper">
-      <div class="product-image-section">
-        <img src="#" alt="Photo">
+    <div class="d-flex align-items-start gap-4 bg-dark text-white p-4 rounded shadow-sm" style="font-size: 16px;">
+
+      <div>
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" style="width: 480px; height: auto; border-radius: 10px;">
+        {% else %}
+          <div style="width: 280px; height: 480px; background-color: #eee; border-radius: 10px;"></div>
+        {% endif %}
       </div>
 
-      <div class="product-info-section">
-        <div>
-          <h2>{{ product.name }}</h2>
-          <p>Категорія: {{ product.category }}</p>
-          <p>Памʼять: {{ product.memory }} GB</p>
-          <p>Ємність акумулятора: {{ product.battery_capacity }}</p>
-          <p>Розмір екрана: {{ product.screen_size }} mpx</p>
-          <p>Колір: {{ product.color }}</p>
-          <p>Ціна: {{ product.price }} $</p>
-        </div>
-        <form action="{% url 'store:add-to-cart' product_id=product.id %}" method="post">
-          {% csrf_token %}
-          {{ form.as_p }}
-          <button type="submit" class="btn btn-outline-dark btn-sm" style="width: 200px; height: 50px;">Додати до кошика</button>
-        </form>
+      <div class="d-flex justify-content-between w-100" style="margin: 5px">
 
+        <div class="flex-grow-1 pe-4">
+
+          <div class="mb-3">
+            <h2 style="text-align: center">{{ product.name }}</h2>
+            <p>
+              <strong>Category:</strong> <span style="margin: 5px;" class="badge bg-secondary">{{ product.category }}</span>
+            </p>
+            <p>
+              <strong>Memory:</strong> <span style="margin: 5px;" class="badge bg-secondary">{{ product.memory }}GB</span>
+            </p>
+            <p>
+              <strong>Screen size:</strong><span style="margin: 5px;" class="badge bg-secondary">{{ product.screen_size }}"</span>
+            </p>
+            <p>
+              <strong>Color:</strong> <span style="margin: 5px;" class="badge bg-secondary">{{ product.color }}</span>
+            </p>
+            <p>
+              <strong>Battery capacity:</strong><span style="margin: 5px;" class="badge bg-secondary">{{ product.battery_capacity }} mAh</span>
+            </p>
+            <p>
+              <strong>Price:</strong> <span style="margin: 5px;" class="text-success">{{ product.price }} $</span>
+            </p>
+          </div>
+
+          <form action="{% url 'store:add-to-cart' product_id=product.id %}" method="post">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <button type="submit" class="btn btn-outline-light btn-sm" style="width: 200px; height: 50px;">
+              🛒 Add to cart
+            </button>
+          </form>
+
+          <div class="mt-3" style="max-width: 300px; min-width: 240px;">
+            <h6 class="mb-2">📦 Free Delivery & Warranty</h6>
+            <ul class="mb-2 ps-3" style="font-size: 14px;">
+              <li>Free delivery in 3–5 days</li>
+              <li>1-year official warranty</li>
+              <li>Easy 30-day returns</li>
+            </ul>
+            <p class="fst-italic text-light">🤖 “Life’s better when you’ve got apples...”</p>
+          </div>
+
+        </div>
       </div>
     </div>
-  </div>
 
-  <div>
-    <h3>Description</h3>
-    <p>{{ product.description }}</p>
+    <div class="mt-4">
+      <h4>📄 Description</h4>
+      <p class="bg-light p-3 rounded" style="font-size: 16px; color: #333;">{{ product.description }}</p>
+    </div>
+
   </div>
 {% endblock %}

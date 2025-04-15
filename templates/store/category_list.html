@@ -1,8 +1,20 @@
 {% extends "base.html" %}
 
 {% block content %}
-  <h1>Category list</h1>
-  {% for category in category_list %}
-    <a href="{% url "store:category-products" pk=category.id%}">{{ category.name }}</a>
-  {% endfor %}
+  <h1 class="text-center mb-4">🤖 Categories</h1>
+  <div class="row row-cols-1 row-cols-md-2 g-4">
+    {% for category in category_list %}
+      <div class="col">
+        <a href="{% url "store:category-products" pk=category.id %}" class="text-decoration-none text-dark">
+          <div class="card h-100 text-white bg-dark" >
+            <img src="{{ category.image.url }}" class="card-img-top" alt="{{ category.name }}">
+            <div class="card-body">
+              <h5 style="text-align: center" class="card-title"> {{ category.name }}</h5>
+              <p class="card-text">{{ category.description }}</p>
+            </div>
+          </div>
+        </a>
+      </div>
+    {% endfor %}
+  </div>
 {% endblock %}
