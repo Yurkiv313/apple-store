@@ -65,7 +65,7 @@ python manage.py test store.tests
 Clone the repository, create a virtual environment, and install dependencies:
 
 ```bash
-git clone https://github.com/yourusername/apple-store.git
+git clone https://github.com/Yurkiv313/apple-store.git
 cd apple-store
 python -m venv venv
 source venv/bin/activate
