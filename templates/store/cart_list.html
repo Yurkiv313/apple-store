@@ -1,48 +1,66 @@
 {% extends "base.html" %}
 
 {% block content %}
-  {% if cart_items %}
-    <div>
-      <h3>
-        🤖 Корзина активна. Рівень щастя: 98%.<br>
-        Пора оформлювати замовлення!
-      </h3>
+  <div class="container mt-4">
+    {% if cart_items %}
+
+      <!-- Повідомлення від 🤖 -->
+      <div class="text-white mb-4">
+        <h3>
+          🤖 Cart active. Happiness level: 98%.<br>
+          It’s time to confirm your mission!
+        </h3>
+      </div>
+
+      {% for item in cart_items %}
+  <div class="bg-dark text-white p-4 mb-4 rounded shadow-sm border border-secondary d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center gap-3">
+
+    <div class="flex-grow-1">
+      <h5 class="mb-1">
+        <strong>{{ item.product.name }}</strong>
+      </h5>
+      <p class="mb-0 small">
+        <span class="me-3"><i class="bi bi-tag"></i> Category: <strong>{{ item.product.category }}</strong></span>
+        <span class="me-3"><i class="bi bi-box-seam"></i> Quantity: <strong>{{ item.quantity }}</strong></span>
+        <span><i class="bi bi-cash-coin"></i> Total: <strong>{{ item.total_price }} $</strong></span>
+      </p>
     </div>
-    <hr>
-    <h3>🛒 Your Cart</h3>
-    {% for item in cart_items %}
-      <div class="d-flex justify-content-between align-items-center">
-        <div style="font-size: large;">
-          {{ item.product.name }}
-          | Category: {{ item.product.category }}
-          | quantity: {{ item.quantity }}
-          | total price: {{ item.total_price }} $
-        </div>
-        <form method="post" action="{% url "store:cartitem-delete" pk=item.id %}">
-          {% csrf_token %}
-          <button type="submit" class="btn btn-outline-danger">Delete</button>
-        </form>
-      </div><hr>
-    {% endfor %}
-    <div>
-      <h3>Total order price:</h3>
-      <h4>{{ total_order_price }} $</h4>
-    </div>
-    <div>
-      <a class="btn btn-outline-dark btn-sm"
-         style="width: 300px; height: 50px; align-content: center; font-size: large;"
-         href="{% url "store:order-create" %}">Оформити замовлення</a>
-    </div>
-  {% else %}
-    <div style="text-align: center; margin-top: 100px;">
-      <h2 style="font-size: 33px; color: #333;">
-        🤖 Розрахунок завершено. В корзині — пустота.<br>
-        Пора це виправити. Подаруй сенс моєму існуванню, додай щось! 💾
-      </h2>
-      <a class="btn btn-outline-dark btn-lg"
-        style="margin-top: 20px; font-size: 25px; padding: 15px 30px;" href="{% url 'store:product-list' %}">
-        🚀 Let's GO!
-      </a>
-    </div>
-  {% endif %}
+
+    <form method="post" action="{% url "store:cartitem-delete" pk=item.id %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-danger btn-sm">
+        <i class="bi bi-trash3 me-1"></i> Remove
+      </button>
+    </form>
+  </div>
+{% endfor %}
+
+
+      <div class="text-end mt-4">
+        <h4 class="text-success">Total Order Price: {{ total_order_price }} $</h4>
+      </div>
+
+      <div class="d-flex justify-content-center gap-3 mt-4 flex-wrap">
+        <a class="btn btn-outline-light btn-lg px-4 py-2" href="{% url 'store:category-list' %}">
+          <i class="bi bi-plus-circle me-2"></i> Add more items
+        </a>
+        <a class="btn btn-outline-light btn-lg px-4 py-2" href="{% url "store:order-create" %}">
+          <i class="bi bi-bag-check me-2"></i> Confirm Order
+        </a>
+      </div>
+
+    {% else %}
+
+      <div class="text-center mt-5">
+        <h3 class="text-white mb-4">
+          🤖 Calculation complete. Cart is empty.<br>
+          Give my existence some meaning — add something! 💾
+        </h3>
+        <a href="{% url 'store:product-list' %}" class="btn btn-outline-light btn-lg mt-3 px-5 py-2">
+          <i class="bi bi-shop-window me-2"></i> Let's GO!
+        </a>
+      </div>
+
+    {% endif %}
+  </div>
 {% endblock %}

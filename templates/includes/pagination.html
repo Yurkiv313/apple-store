@@ -1,22 +1,24 @@
 {% load query_transform %}
 {% if is_paginated %}
   <div class="d-flex justify-content-center my-4">
+
     {% if page_obj.has_previous %}
       <a href="?{% query_transform request page=page_obj.previous_page_number %}"
-         class="btn btn-outline-dark btn-sm mx-1" style="width: 100px">
-        Previous
+         class="btn btn-outline-primary btn-lg mx-2" style="min-width: 120px;">
+        « Prev
       </a>
     {% endif %}
 
-    <span class="btn btn-outline-dark btn-sm disabled mx-1" style="color: #000000;">
-      {{ page_obj.number }} of {{ paginator.num_pages }}
+    <span class="btn btn-outline-primary btn-lg disabled mx-2" style="min-width: 140px;">
+      Page {{ page_obj.number }} of {{ paginator.num_pages }}
     </span>
 
     {% if page_obj.has_next %}
       <a href="?{% query_transform request page=page_obj.next_page_number %}"
-         class="btn btn-outline-dark btn-sm mx-1" style="width: 100px">
-        Next
+         class="btn btn-outline-primary btn-lg mx-2" style="min-width: 120px;">
+        Next »
       </a>
     {% endif %}
+
   </div>
 {% endif %}

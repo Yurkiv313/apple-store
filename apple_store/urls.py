@@ -18,7 +18,6 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
-import debug_toolbar
 
 from store.views import CustomLoginView, CustomLogoutView, SignUpGenericView, ActivateAccountView
 
@@ -29,7 +28,6 @@ urlpatterns = [
     path("logout/", CustomLogoutView.as_view(), name="logout"),
     path("signup/", SignUpGenericView.as_view(), name="signup"),
     path("activate/<uidb64>/<token>/", ActivateAccountView.as_view(), name="activate"),
-    path("__debug__/", include(debug_toolbar.urls)),
 ]
 
 if settings.DEBUG:

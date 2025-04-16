@@ -181,8 +181,8 @@ class OrderCreateView(LoginRequiredMixin, generic.CreateView):
         messages.success(
             self.request,
             mark_safe(
-                "🤖 Дякую за замовлення! Наші дрони зараз зайняті важливою місією (ви знаєте якою...)😎🇺🇦<br>"
-                "Але не хвилюйтесь — у мене є... альтернативні способи доставки 🛸... Швидкість — гарантована!!!"
+                "Thank you for your order! Our drones are currently on a top-secret mission (you know which one...) 😎🇺🇦<br>"
+                "But don’t worry — I have... alternative delivery methods 🛸... Speed guaranteed!"
             )
         )
 

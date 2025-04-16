@@ -1,0 +1,8 @@
+Django==5.2
+django-crispy-forms==2.3
+crispy-bootstrap5==2025.4
+django-debug-toolbar==5.1.0
+django-storages==1.14.6
+boto3==1.37.33
+Pillow==11.1.0
+python-dotenv==1.1.0
