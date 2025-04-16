@@ -47,6 +47,18 @@ apple_store/
 ```
 
 ---
+✅ Tests
+
+Basic test coverage is included for:
+
+models (__str__, computed fields)
+views (product listing, cart, orders)
+forms (cart and user creation)
+admin interface (custom fields and displays)
+To run tests:
+```bash
+python manage.py test store.tests
+```
 
 ## ⚙️ Installation
 

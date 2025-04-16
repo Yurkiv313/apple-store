@@ -11,6 +11,12 @@ class CartItemForm(forms.ModelForm):
         model = CartItem
         fields = ["quantity", ]
 
+    def clean_quantity(self):
+        quantity = self.cleaned_data["quantity"]
+        if quantity < 1:
+            raise forms.ValidationError("Quantity must be at least 1.")
+        return quantity
+
 
 class CustomUserCreationForm(UserCreationForm):
     email = forms.EmailField(required=True, label="Email address")
