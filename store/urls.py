@@ -22,22 +22,22 @@ urlpatterns = [
         ProductDetailView.as_view(),
         name="product-detail",
     ),
-    path("category/", CategoryListView.as_view(), name="category-list"),
+    path("categories/", CategoryListView.as_view(), name="category-list"),
     path(
-        "category/<int:pk>/products/",
+        "categories/<int:pk>/products/",
         CategoryProductListView.as_view(),
         name="category-products",
     ),
-    path("cart/", CartListView.as_view(), name="cart"),
+    path("cart/items/", CartListView.as_view(), name="cart"),
     path(
-        "cart/item/<int:pk>/delete/",
+        "cart/items/<int:pk>/delete/",
         CartItemDeleteView.as_view(),
         name="cartitem-delete",
     ),
     path(
-        "add-to-cart/<product_id>/",
+        "cart/items/add/<product_id>/",
         CartItemCreateView.as_view(),
         name="add-to-cart",
     ),
-    path("order/create/", OrderCreateView.as_view(), name="order-create"),
+    path("orders/create/", OrderCreateView.as_view(), name="order-create"),
 ]
