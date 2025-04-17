@@ -72,7 +72,7 @@
     <div class="bg-light text-dark rounded p-5 mt-5 shadow-sm">
       <h4 class="mb-3">Product Description</h4>
       {% if product.description %}
-        <p style="font-size: 1.15rem; line-height: 1.6;">{{ product.description }}</p>
+        <p style="font-size: 1.15rem; line-height: 1.6;">{{ product.description|safe }}</p>
       {% else %}
         <p class="fst-italic text-muted">No additional description provided for this product.</p>
       {% endif %}

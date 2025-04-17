@@ -89,4 +89,8 @@ python manage.py migrate
 python manage.py runserver
 ```
 
+## 📦 Populate Database
+```bash
+python manage.py populate_db
+```
 ---
