@@ -1,18 +1,13 @@
-import logging
-
 from django.contrib import messages
 from django.contrib.auth import login, logout
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.sites.shortcuts import get_current_site
-from django.core.mail import EmailMessage
 from django.db import transaction
 from django.db.models import Q
 from django.shortcuts import redirect, render
-from django.template.loader import render_to_string
 from django.urls import reverse, reverse_lazy
-from django.utils.encoding import force_str, force_bytes
-from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
+from django.utils.encoding import force_str
+from django.utils.http import urlsafe_base64_decode
 from django.views import generic, View
 from django.views.generic import TemplateView
 from django.utils.safestring import mark_safe
@@ -23,6 +18,7 @@ from store.forms import (
     ProductNameSearchForm,
 )
 from store.models import Product, Category, CartItem, Cart, Order, CustomUser
+from store.services.email_service import send_activation_email
 from store.services.token_service import account_activation_token
 
 
@@ -245,30 +241,10 @@ class SignUpGenericView(generic.CreateView):
 
     @transaction.atomic
     def form_valid(self, form):
-        try:
-            user = form.save(commit=False)
-            user.is_active = False
-            user.save()
-            current_site = get_current_site(self.request)
-            mail_subject = "Activate your account."
-            message = render_to_string(
-                "registration/emails/acc_active_email.html",
-                {
-                    "user": user,
-                    "domain": current_site.domain,
-                    "uid": urlsafe_base64_encode(force_bytes(user.pk)),
-                    "token": account_activation_token.make_token(user),
-                },
-            )
-            email = EmailMessage(mail_subject, message, to=[user.email])
-            email.content_subtype = "html"
-            email.send()
-        except Exception as e:
-            logging.error(f"Error sending email: {e}")
-
-            return render(
-                self.request, "registration/signup.html", {"form": form}
-            )
+        user = form.save(commit=False)
+        user.is_active = False
+        user.save()
+        send_activation_email(self.request, user)
 
         return render(
             self.request, "registration/email_confirmation_sent.html"
