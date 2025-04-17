@@ -1,7 +1,7 @@
 from django.contrib.auth.models import AbstractUser
 from django.db import models
 
-from apple_store import settings
+from apple_store.settings.base import AUTH_USER_MODEL
 
 
 class CustomUser(AbstractUser):
@@ -34,7 +34,7 @@ class Product(models.Model):
 
 class Cart(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL,
+        AUTH_USER_MODEL,
         null=True,
         blank=True,
         on_delete=models.SET_NULL,
@@ -64,7 +64,7 @@ class CartItem(models.Model):
 
 class Order(models.Model):
     user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+        AUTH_USER_MODEL, on_delete=models.CASCADE
     )
     created_at = models.DateTimeField(auto_now_add=True)
 

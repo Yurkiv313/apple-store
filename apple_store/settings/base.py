@@ -16,19 +16,14 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", "django-insecure-d(n6_dlon6*hip+@-i3nlom8jasf1c=&g5%kb3*(s(x78+_(1w")
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = os.environ.get("DJANGO_DEBUG", "") != "False"
-
-ALLOWED_HOSTS = ["127.0.0.1"]
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY")
 
 
 # Application definition
@@ -77,17 +72,6 @@ TEMPLATES = [
 WSGI_APPLICATION = "apple_store.wsgi.application"
 
 
-# Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
-DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
-    }
-}
-
-
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
@@ -121,8 +105,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = "static/"
 
 STATICFILES_DIRS = [BASE_DIR / "static"]
 
@@ -158,6 +140,10 @@ AWS_SECRET_ACCESS_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
 AWS_STORAGE_BUCKET_NAME = os.getenv("AWS_STORAGE_BUCKET_NAME")
 AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
 AWS_S3_FILE_OVERWRITE = False
+AWS_DEFAULT_ACL = None
+
+STATICFILES_STORAGE = "store.custom_storages.StaticStorage"
+STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/static/"
 
 STORAGES = {
     "default": {
@@ -165,7 +151,6 @@ STORAGES = {
     },
 
     "staticfiles": {
-        "BACKEND": 'storages.backends.s3boto3.S3Boto3Storage',
+        "BACKEND": "store.custom_storages.StaticStorage",
     }
 }
-
