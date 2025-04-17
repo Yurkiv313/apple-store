@@ -6,6 +6,11 @@ built with Django and Bootstrap 5.
 It offers smooth product browsing, category filtering, a full-featured shopping cart, order processing, and secure user authentication with email confirmation — all backed by AWS S3 media storage.
 
 ---
+## 🌐 Live Demo
+
+You can visit the live version of the project here:  
+🔗 [Apple Store on Render](https://apple-store-so34.onrender.com/)
+
 
 ## 🚀 Features
 
