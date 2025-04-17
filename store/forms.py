@@ -9,7 +9,9 @@ User = get_user_model()
 class CartItemForm(forms.ModelForm):
     class Meta:
         model = CartItem
-        fields = ["quantity", ]
+        fields = [
+            "quantity",
+        ]
 
     def clean_quantity(self):
         quantity = self.cleaned_data["quantity"]
@@ -29,12 +31,6 @@ class CustomUserCreationForm(UserCreationForm):
             "phone_number",
             "email",
         )
-        widgets = {
-            "first_name": forms.TextInput(attrs={"class": "form-control", "style": "max-width: 100%;"}),
-            "last_name": forms.TextInput(attrs={"class": "form-control", "style": "max-width: 100%;"}),
-            "phone_number": forms.TextInput(attrs={"class": "form-control", "style": "max-width: 100%;"}),
-            "email": forms.EmailInput(attrs={"class": "form-control", "style": "max-width: 100%;"}),
-        }
 
 
 class ProductNameSearchForm(forms.Form):

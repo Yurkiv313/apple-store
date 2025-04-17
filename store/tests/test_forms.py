@@ -24,7 +24,7 @@ class CustomUserCreationFormTests(TestCase):
             "email": "test@example.com",
             "first_name": "Test",
             "last_name": "User",
-            "phone_number": "123456789"
+            "phone_number": "123456789",
         }
         form = CustomUserCreationForm(data=form_data)
         self.assertTrue(form.is_valid())
@@ -39,7 +39,7 @@ class CustomUserCreationFormTests(TestCase):
             "email": "test@example.com",
             "first_name": "Test",
             "last_name": "User",
-            "phone_number": "123456789"
+            "phone_number": "123456789",
         }
         form = CustomUserCreationForm(data=form_data)
         self.assertFalse(form.is_valid())

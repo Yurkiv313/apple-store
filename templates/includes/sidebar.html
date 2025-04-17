@@ -5,19 +5,22 @@
   <ul class="nav flex-column gap-2">
     <li class="nav-item">
       <a href="{% url 'store:home' %}"
-         class="nav-link {% if request.resolver_match.url_name == 'home' %}active bg-secondary text-white rounded{% else %}text-white{% endif %}">
+         class="nav-link {% if request.resolver_match.url_name == 'home' %}active bg-secondary text-white rounded
+         {% else %}text-white{% endif %}">
         <i class="bi bi-house-door-fill me-2"></i> Home
       </a>
     </li>
     <li class="nav-item">
       <a href="{% url 'store:product-list' %}"
-         class="nav-link {% if request.resolver_match.url_name == 'product-list' %}active bg-secondary text-white rounded{% else %}text-white{% endif %}">
+         class="nav-link {% if request.resolver_match.url_name == 'product-list' %}active bg-secondary text-white rounded
+         {% else %}text-white{% endif %}">
         <i class="bi bi-phone-fill me-2"></i> All Products
       </a>
     </li>
     <li class="nav-item">
       <a href="{% url 'store:category-list' %}"
-         class="nav-link {% if request.resolver_match.url_name == 'category-list' %}active bg-secondary text-white rounded{% else %}text-white{% endif %}">
+         class="nav-link {% if request.resolver_match.url_name == 'category-list' %}active bg-secondary text-white rounded
+         {% else %}text-white{% endif %}">
         <i class="bi bi-grid-fill me-2"></i> Categories
       </a>
     </li>

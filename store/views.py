@@ -17,7 +17,11 @@ from django.views import generic, View
 from django.views.generic import TemplateView
 from django.utils.safestring import mark_safe
 
-from store.forms import CartItemForm, CustomUserCreationForm, ProductNameSearchForm
+from store.forms import (
+    CartItemForm,
+    CustomUserCreationForm,
+    ProductNameSearchForm,
+)
 from store.models import Product, Category, CartItem, Cart, Order, CustomUser
 from store.services.token_service import account_activation_token
 
@@ -34,19 +38,21 @@ class ProductListView(generic.ListView):
         queryset = Product.objects.select_related("category")
         form = ProductNameSearchForm(self.request.GET or None)
         if form.is_valid():
-            query = form.cleaned_data['query']
+            query = form.cleaned_data["query"]
             return queryset.filter(
-                Q(name__icontains=query) |
-                Q(category__name__icontains=query) |
-                Q(memory__icontains=query) |
-                Q(color__icontains=query)
+                Q(name__icontains=query)
+                | Q(category__name__icontains=query)
+                | Q(memory__icontains=query)
+                | Q(color__icontains=query)
             )
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super(ProductListView, self).get_context_data(**kwargs)
         query = self.request.GET.get("query", "")
-        context["search_form"] = ProductNameSearchForm(initial={"query": query})
+        context["search_form"] = ProductNameSearchForm(
+            initial={"query": query}
+        )
         return context
 
 
@@ -73,21 +79,27 @@ class CategoryProductListView(generic.ListView):
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
-        queryset = Product.objects.select_related("category").filter(category=pk)
+        queryset = Product.objects.select_related("category").filter(
+            category=pk
+        )
         form = ProductNameSearchForm(self.request.GET or None)
         if form.is_valid():
-            query = form.cleaned_data['query']
+            query = form.cleaned_data["query"]
             return queryset.filter(
-                Q(name__icontains=query) |
-                Q(memory__icontains=query) |
-                Q(color__icontains=query)
+                Q(name__icontains=query)
+                | Q(memory__icontains=query)
+                | Q(color__icontains=query)
             )
         return queryset
 
     def get_context_data(self, *, object_list=None, **kwargs):
-        context = super(CategoryProductListView, self).get_context_data(**kwargs)
+        context = super(CategoryProductListView, self).get_context_data(
+            **kwargs
+        )
         query = self.request.GET.get("query", "")
-        context["search_form"] = ProductNameSearchForm(initial={"query": query})
+        context["search_form"] = ProductNameSearchForm(
+            initial={"query": query}
+        )
         return context
 
 
@@ -112,7 +124,9 @@ class CartListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         cart_items = context["cart_items"]
-        context["total_order_price"] = sum(item.total_price for item in cart_items)
+        context["total_order_price"] = sum(
+            item.total_price for item in cart_items
+        )
         return context
 
 
@@ -122,9 +136,7 @@ class CartItemCreateView(generic.CreateView):
 
     def form_valid(self, form):
         if self.request.user.is_authenticated:
-            cart, created = Cart.objects.get_or_create(
-                user=self.request.user
-            )
+            cart, created = Cart.objects.get_or_create(user=self.request.user)
         else:
             if not self.request.session.session_key:
                 self.request.session.create()
@@ -134,7 +146,9 @@ class CartItemCreateView(generic.CreateView):
 
         product = Product.objects.get(pk=self.kwargs["product_id"])
 
-        exist_item = CartItem.objects.filter(cart=cart, product=product).first()
+        exist_item = CartItem.objects.filter(
+            cart=cart, product=product
+        ).first()
         if exist_item:
             exist_item.quantity += form.cleaned_data["quantity"]
             exist_item.save()
@@ -145,7 +159,9 @@ class CartItemCreateView(generic.CreateView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse("store:product-detail", kwargs={"pk": self.kwargs["product_id"]})
+        return reverse(
+            "store:product-detail", kwargs={"pk": self.kwargs["product_id"]}
+        )
 
 
 class CartItemDeleteView(generic.DeleteView):
@@ -178,13 +194,17 @@ class OrderCreateView(LoginRequiredMixin, generic.CreateView):
     def form_valid(self, form):
         form.instance.user = self.request.user
         CartItem.objects.filter(cart__user=self.request.user).delete()
-        messages.success(
-            self.request,
-            mark_safe(
-                "Thank you for your order! Our drones are currently on a top-secret mission (you know which one...) 😎🇺🇦<br>"
-                "But don’t worry — I have... alternative delivery methods 🛸... Speed guaranteed!"
+
+        message = mark_safe(
+            (
+                "Thank you for your order! "
+                "Our drones are currently on a top-secret mission "
+                "(you know which one...) 😎🇺🇦<br>"
+                "But don’t worry — I have... alternative delivery methods 🛸..."
+                "Speed guaranteed!"
             )
         )
+        messages.success(self.request, message)
 
         return super().form_valid(form)
 
@@ -192,22 +212,24 @@ class OrderCreateView(LoginRequiredMixin, generic.CreateView):
 class CustomLoginView(View):
     def get(self, request):
         next_url = request.GET.get("next", "/")
-        return render(request, "registration/login.html", {
-            "form": AuthenticationForm(),
-            "next": next_url
-        })
+        return render(
+            request,
+            "registration/login.html",
+            {"form": AuthenticationForm(), "next": next_url},
+        )
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
         next_url = request.POST.get("next", "/")
         if form.is_valid():
-            request.session['pre_login_key'] = request.session.session_key
+            request.session["pre_login_key"] = request.session.session_key
             login(request, form.get_user())
             return redirect(next_url)
-        return render(request, "registration/login.html", {
-            "form": form,
-            "next": next_url
-        })
+        return render(
+            request,
+            "registration/login.html",
+            {"form": form, "next": next_url},
+        )
 
 
 class CustomLogoutView(View):
@@ -244,9 +266,13 @@ class SignUpGenericView(generic.CreateView):
         except Exception as e:
             logging.error(f"Error sending email: {e}")
 
-            return render(self.request, "registration/signup.html", {"form": form})
+            return render(
+                self.request, "registration/signup.html", {"form": form}
+            )
 
-        return render(self.request, "registration/email_confirmation_sent.html")
+        return render(
+            self.request, "registration/email_confirmation_sent.html"
+        )
 
 
 class ActivateAccountView(View):
@@ -254,16 +280,25 @@ class ActivateAccountView(View):
         try:
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = CustomUser.objects.get(pk=uid)
-        except (TypeError, ValueError, OverflowError, CustomUser.DoesNotExist):
+        except (
+            TypeError,
+            ValueError,
+            OverflowError,
+            CustomUser.DoesNotExist,
+        ):
             user = None
 
-        if user is not None and account_activation_token.check_token(user, token):
+        if user is not None and account_activation_token.check_token(
+            user, token
+        ):
             user.is_active = True
             user.save()
-            # login(request, user)
             messages.success(
                 request,
-                "🤖 Thank you for confirming your email. You can now login to your account.",
+                (
+                    "🤖 Thank you for confirming your email. "
+                    "You can now login to your account."
+                ),
             )
             return redirect("login")
         else:

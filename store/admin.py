@@ -43,7 +43,7 @@ class ProductAdmin(admin.ModelAdmin):
         "screen_size",
         "color",
         "description",
-        "image"
+        "image",
     ]
 
     search_fields = ["category__name"]
