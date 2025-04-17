@@ -178,7 +178,7 @@ class CartItemDeleteView(generic.DeleteView):
 class OrderCreateView(LoginRequiredMixin, generic.CreateView):
     model = Order
     fields = []
-    login_url = "/login/"
+    login_url = reverse_lazy("login")
     template_name = "store/order_confirm_page.html"
     success_url = reverse_lazy("store:home")
 
@@ -207,7 +207,7 @@ class OrderCreateView(LoginRequiredMixin, generic.CreateView):
 
 class CustomLoginView(View):
     def get(self, request):
-        next_url = request.GET.get("next", "/")
+        next_url = request.GET.get("next", reverse("store:home"))
         return render(
             request,
             "registration/login.html",
@@ -216,7 +216,7 @@ class CustomLoginView(View):
 
     def post(self, request):
         form = AuthenticationForm(data=request.POST)
-        next_url = request.POST.get("next", "/")
+        next_url = request.POST.get("next", reverse("store:home"))
         if form.is_valid():
             request.session["pre_login_key"] = request.session.session_key
             login(request, form.get_user())

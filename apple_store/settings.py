@@ -141,8 +141,8 @@ EMAIL_PORT = os.getenv("EMAIL_PORT", 587)
 
 
 LOGIN_REDIRECT_URL = "store:home"
-LOGIN_URL = "store:login"
-LOGOUT_REDIRECT_URL = "store:login"
+LOGIN_URL = "login"
+LOGOUT_REDIRECT_URL = "login"
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 CRISPY_TEMPLATE_PACK = "bootstrap5"
