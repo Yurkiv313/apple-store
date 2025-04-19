@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="bg-dark text-white text-center py-5 px-3 shadow rounded mb-5">
+    <div class="container">
+      <h1 class="display-3 fw-bold mb-3"> Apple Store</h1>
+      <p class="lead mb-4" style="max-width: 750px; margin: 0 auto;">
+        Discover the future of Apple technology — elegant, powerful, and always original.
+        Your favorite iPhones, MacBooks, and accessories — now just a click away.
+      </p>
+
+      <div class="d-flex justify-content-center gap-3 flex-wrap">
+        <a href="{% url 'store:product-list' %}" class="btn btn-outline-light btn-lg px-5 py-2">
+          🛍️ Explore Products
+        </a>
+        <a href="{% url 'store:category-list' %}" class="btn btn-outline-light btn-lg px-5 py-2">
+          🔎 Browse Categories
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <section class="text-white text-center mb-5">
+    <div class="p-4 border rounded bg-secondary bg-opacity-10 shadow-sm">
+      <h4 class="mb-3">🤖 Your Virtual Assistant</h4>
+      <p class="lead">
+        I'm here to guide you through the best Apple deals and make sure your cart always smiles 😎
+      </p>
+    </div>
+  </section>
+
+  <section class="container mb-5">
+    <div class="row text-center text-white gy-4">
+
+      <div class="col-md-4">
+        <div class="p-4 border rounded bg-dark bg-opacity-75 h-100 shadow-sm">
+          <i class="bi bi-lightning-fill fs-1 mb-3"></i>
+          <h5 class="fw-semibold">Fast & Free Delivery</h5>
+          <p>3–5 days delivery across Ukraine. Always on time.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="p-4 border rounded bg-dark bg-opacity-75 h-100 shadow-sm">
+          <i class="bi bi-shield-check fs-1 mb-3"></i>
+          <h5 class="fw-semibold">Official Warranty</h5>
+          <p>Every product includes 12-month official warranty.</p>
+        </div>
+      </div>
+
+      <div class="col-md-4">
+        <div class="p-4 border rounded bg-dark bg-opacity-75 h-100 shadow-sm">
+          <i class="bi bi-headset fs-1 mb-3"></i>
+          <h5 class="fw-semibold">Support 24/7</h5>
+          <p>We’re always here to help — before and after purchase.</p>
+        </div>
+      </div>
+
+    </div>
+  </section>
+{% endblock %}

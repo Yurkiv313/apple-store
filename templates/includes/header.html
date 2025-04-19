@@ -1,0 +1,20 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-4 py-3 shadow-sm">
+  <div class="container-fluid d-flex justify-content-between align-items-center">
+    <a class="navbar-brand fw-bold fs-4" href="{% url 'store:home' %}"> Apple Store</a>
+
+    <div class="d-flex align-items-center gap-3">
+      {% if user.is_authenticated %}
+        <span class="text-white">Welcome back, <strong>{{ user.username }}</strong> 👋</span>
+        <a href="{% url 'store:cart' %}" class="btn btn-outline-light">🛒 Cart</a>
+        <form method="post" action="{% url 'logout' %}" class="d-inline">
+          {% csrf_token %}
+          <button class="btn btn-outline-light" type="submit">🔒 Logout</button>
+        </form>
+      {% else %}
+        <span class="text-white">Guest mode activated 🤖</span>
+        <a href="{% url 'store:cart' %}" class="btn btn-outline-light">🛒 Cart</a>
+        <a href="{% url 'login' %}" class="btn btn-outline-light">🔐 Login</a>
+      {% endif %}
+    </div>
+  </div>
+</nav>
