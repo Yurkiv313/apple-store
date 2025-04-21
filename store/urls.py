@@ -10,6 +10,8 @@ from store.views import (
     CartItemCreateView,
     OrderCreateView,
     CartItemDeleteView,
+    OrderListView,
+    ProfileUpdateView,
 )
 
 app_name = "store"
@@ -39,5 +41,7 @@ urlpatterns = [
         CartItemCreateView.as_view(),
         name="add-to-cart",
     ),
+    path("orders/", OrderListView.as_view(), name="order-list"),
     path("orders/create/", OrderCreateView.as_view(), name="order-create"),
+    path("profile/", ProfileUpdateView.as_view(), name="profile"),
 ]

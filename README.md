@@ -11,6 +11,9 @@ It offers smooth product browsing, category filtering, a full-featured shopping 
 You can visit the live version of the project here:  
 🔗 [Apple Store on Render](https://apple-store-so34.onrender.com/)
 
+🧪 Test user credentials (no registration needed):
+- Login: user
+- Password: user12345
 
 ## 🚀 Features
 

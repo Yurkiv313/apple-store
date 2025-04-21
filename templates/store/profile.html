@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+  <div class="container mt-4">
+    <div class="card bg-dark text-white border border-secondary shadow-sm p-4">
+      <h3 class="mb-4 text-info">👤 Update Your Profile</h3>
+
+      <form method="post">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-outline-light mt-3 px-4">💾 Save Changes</button>
+      </form>
+    </div>
+  </div>
+{% endblock %}

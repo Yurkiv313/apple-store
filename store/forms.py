@@ -35,3 +35,9 @@ class CustomUserCreationForm(UserCreationForm):
 
 class ProductNameSearchForm(forms.Form):
     query = forms.CharField(max_length=255, required=False, label="")
+
+
+class ProfileUpdateForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ["username", "first_name", "last_name", "phone_number"]

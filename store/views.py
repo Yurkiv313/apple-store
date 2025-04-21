@@ -1,5 +1,5 @@
 from django.contrib import messages
-from django.contrib.auth import login, logout
+from django.contrib.auth import login, logout, get_user_model
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db import transaction
@@ -9,13 +9,13 @@ from django.urls import reverse, reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.http import urlsafe_base64_decode
 from django.views import generic, View
-from django.views.generic import TemplateView
+from django.views.generic import TemplateView, UpdateView
 from django.utils.safestring import mark_safe
 
 from store.forms import (
     CartItemForm,
     CustomUserCreationForm,
-    ProductNameSearchForm,
+    ProductNameSearchForm, ProfileUpdateForm,
 )
 from store.models import Product, Category, CartItem, Cart, Order, CustomUser
 from store.services.email_service import send_activation_email
@@ -26,9 +26,26 @@ class HomeView(TemplateView):
     template_name = "store/home.html"
 
 
+class ProfileUpdateView(LoginRequiredMixin, UpdateView):
+    model = get_user_model()
+    form_class = ProfileUpdateForm
+    template_name = "store/profile.html"
+    success_url = reverse_lazy("store:profile")
+
+    def get_object(self, queryset=None):
+        return self.request.user
+
+    def form_valid(self, form):
+        messages.success(
+            self.request,
+            "✅ Your profile was updated successfully."
+        )
+        return super().form_valid(form)
+
+
 class ProductListView(generic.ListView):
     model = Product
-    paginate_by = 5
+    paginate_by = 8
 
     def get_queryset(self):
         queryset = Product.objects.select_related("category")
@@ -71,7 +88,7 @@ class CategoryListView(generic.ListView):
 
 class CategoryProductListView(generic.ListView):
     model = Product
-    paginate_by = 5
+    paginate_by = 8
 
     def get_queryset(self):
         pk = self.kwargs["pk"]
@@ -141,6 +158,7 @@ class CartItemCreateView(generic.CreateView):
             )
 
         product = Product.objects.get(pk=self.kwargs["product_id"])
+        messages.success(self.request, f'{product.name} added to cart ✅')
 
         exist_item = CartItem.objects.filter(
             cart=cart, product=product
@@ -205,6 +223,14 @@ class OrderCreateView(LoginRequiredMixin, generic.CreateView):
         return super().form_valid(form)
 
 
+class OrderListView(LoginRequiredMixin, generic.ListView):
+    model = Order
+    login_url = reverse_lazy("login")
+
+    def get_queryset(self):
+        return Order.objects.filter(user=self.request.user)
+
+
 class CustomLoginView(View):
     def get(self, request):
         next_url = request.GET.get("next", reverse("store:home"))
@@ -257,15 +283,15 @@ class ActivateAccountView(View):
             uid = force_str(urlsafe_base64_decode(uidb64))
             user = CustomUser.objects.get(pk=uid)
         except (
-            TypeError,
-            ValueError,
-            OverflowError,
-            CustomUser.DoesNotExist,
+                TypeError,
+                ValueError,
+                OverflowError,
+                CustomUser.DoesNotExist,
         ):
             user = None
 
         if user is not None and account_activation_token.check_token(
-            user, token
+                user, token
         ):
             user.is_active = True
             user.save()
