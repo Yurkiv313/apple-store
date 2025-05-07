@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <div class="d-flex justify-content-center">
+    <div class="card bg-dark text-white mb-3 shadow-lg border-secondary"
+         style="width: 100%; max-width: 800px;">
+      <div class="card-header text-center border-bottom border-secondary">
+        <h4>🔐 Login to Apple Store</h4>
+      </div>
+      <div class="card-body">
+        <form method="post" action="{% url 'login' %}">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <div class="text-center mt-3">
+            <input class="btn btn-outline-light px-4 py-2" type="submit" value="Login">
+            <input type="hidden" name="next" value="{{ next }}">
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center my-4">
+    <div class="p-4 bg-secondary bg-opacity-10 rounded border border-secondary shadow-sm">
+      <h5 class="text-white mb-2">🤖 Assistant</h5>
+      <p class="text-light lead mb-0">
+        Don’t have an account yet? You can create one below to access all features of the Apple Store.
+      </p>
+    </div>
+  </div>
+
+  <div class="text-center mt-4">
+    <a class="btn btn-outline-light btn-lg px-5 py-2" href="{% url "signup" %}">
+      Create New Account
+    </a>
+  </div>
+{% endblock %}

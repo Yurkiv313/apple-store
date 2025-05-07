@@ -1,0 +1,31 @@
+<aside class="bg-dark text-white p-4 d-flex flex-column shadow-sm"
+       style="width: 250px; height: 100%; flex-shrink: 0; box-shadow: 2px 0 10px rgba(0,0,0,0.4);">
+
+  <h5 class="mb-3">Navigation</h5>
+  <ul class="nav flex-column gap-2">
+    <li class="nav-item">
+      <a href="{% url 'store:home' %}"
+         class="nav-link {% if request.resolver_match.url_name == 'home' %}active bg-secondary text-white rounded{% else %}text-white{% endif %}">
+        <i class="bi bi-house-door-fill me-2"></i> Home
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'store:product-list' %}"
+         class="nav-link {% if request.resolver_match.url_name == 'product-list' %}active bg-secondary text-white rounded{% else %}text-white{% endif %}">
+        <i class="bi bi-phone-fill me-2"></i> All Products
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'store:category-list' %}"
+         class="nav-link {% if request.resolver_match.url_name == 'category-list' %}active bg-secondary text-white rounded{% else %}text-white{% endif %}">
+        <i class="bi bi-grid-fill me-2"></i> Categories
+      </a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'store:order-list' %}"
+         class="nav-link {% if request.resolver_match.url_name == 'order-list' %}active bg-secondary text-white rounded{% else %}text-white{% endif %}">
+        <i class="bi bi-card-checklist me-2"></i> My Orders
+      </a>
+    </li>
+  </ul>
+</aside>

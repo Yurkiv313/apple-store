@@ -1,0 +1,15 @@
+body {
+  background-color: #111111;
+  margin: 0;
+  padding: 0;
+}
+
+section {
+  background-color: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+footer {
+  background-color: #0d0d0d !important;
+}

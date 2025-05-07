@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load crispy_forms_filters %}
+
+{% block content %}
+  <div class="container mt-4">
+
+    <div class="row bg-dark text-white rounded shadow-sm p-4 align-items-start">
+
+      <div class="col-md-6 text-center mb-4 mb-md-0">
+        {% if product.image %}
+          <img src="{{ product.image.url }}" alt="{{ product.name }}" class="img-fluid rounded"
+               style="max-height: 500px;">
+        {% else %}
+          <div class="bg-secondary text-white d-flex align-items-center justify-content-center rounded"
+               style="height: 400px;">No image</div>
+        {% endif %}
+      </div>
+
+      <div class="col-md-6">
+        <h2 class="mb-3">{{ product.name }}</h2>
+
+        <p class="mb-2">
+          <strong>Category:</strong>
+          <span class="badge bg-secondary">{{ product.category }}</span>
+        </p>
+
+        <p class="mb-2">
+          <strong>Memory:</strong>
+          <span class="badge bg-secondary">{{ product.memory }}GB</span>
+        </p>
+
+        <p class="mb-2">
+          <strong>Screen Size:</strong>
+          <span class="badge bg-secondary">{{ product.screen_size }}"</span>
+        </p>
+
+        <p class="mb-2">
+          <strong>Color:</strong>
+          <span class="badge bg-secondary">{{ product.color }}</span>
+        </p>
+
+        <p class="mb-2">
+          <strong>Battery Capacity:</strong>
+          <span class="badge bg-secondary">{{ product.battery_capacity }} mAh</span>
+        </p>
+
+        <p class="mt-4 fs-4 text-success">
+          <strong>{{ product.price }} $</strong>
+        </p>
+
+        <form method="post" action="{% url 'store:add-to-cart' product.id %}">
+          {% csrf_token %}
+          {{ form|crispy }}
+          <button type="submit" class="btn btn-outline-light px-4 py-2 mt-2">
+            <i class="bi bi-cart-plus"></i> Add to cart
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="bg-dark text-white p-4 mt-5 rounded shadow-sm border border-secondary">
+      <h5 class="mb-3">🤖 Assistant Note — What's Included</h5>
+      <ul class="list-unstyled mb-0" style="line-height: 1.9; font-size: 1.05rem;">
+        <li><i class="bi bi-box me-2 text-secondary"></i> {{ product.name }} — fully inspected and ready to go</li>
+        <li><i class="bi bi-lightning-charge me-2 text-secondary"></i> Charging cable — standard and ready to use</li>
+        <li><i class="bi bi-book me-2 text-secondary"></i> Quick start guide — you probably won’t read it, but it’s here</li>
+        <li><i class="bi bi-shield-check me-2 text-secondary"></i> Official warranty — 12 months of peace of mind</li>
+        <li><i class="bi bi-emoji-smile me-2 text-secondary"></i> …and two apples, because I care 🍏🍏</li>
+      </ul>
+    </div>
+
+    <div class="bg-light text-dark rounded p-5 mt-5 shadow-sm">
+      <h4 class="mb-3">Product Description</h4>
+      {% if product.description %}
+        <p style="font-size: 1.15rem; line-height: 1.6;">{{ product.description|safe }}</p>
+      {% else %}
+        <p class="fst-italic text-muted">No additional description provided for this product.</p>
+      {% endif %}
+    </div>
+
+  </div>
+{% endblock %}
